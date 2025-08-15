@@ -1,20 +1,20 @@
-
 /*
- * Author: Effat Mujawar 
- * Date:10/08/2025
- **/package com.hexaware.HotPot.controller;
-
-import java.util.List;
-import java.util.Optional;
-
-import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+ * Author: Effat Mujawar
+ * Date: 15/08/2025
+ */
+package com.hexaware.HotPot.controller;
 
 import com.hexaware.HotPot.dto.UserDTO;
 import com.hexaware.HotPot.entity.User;
 import com.hexaware.HotPot.entity.enums.Role;
+import com.hexaware.HotPot.exception.UserNotFoundException;
 import com.hexaware.HotPot.service.IUserService;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
@@ -24,24 +24,27 @@ public class UserRestController {
     private IUserService userService;
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED) 
     public User create(@Valid @RequestBody UserDTO dto) {
         return userService.create(dto);
     }
 
     @GetMapping("/{id}")
-    public Optional<User> getById(@PathVariable Long id) {
-        return userService.getById(id);
+    public User getById(@PathVariable Long id) {
+        return userService.getById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found: " + id));
     }
 
-    @PutMapping
-    public User update(@Valid @RequestBody UserDTO dto) {
+    @PutMapping("/{id}")
+    public User update(@PathVariable Long id, @Valid @RequestBody UserDTO dto) {
+        dto.setUserId(id); 
         return userService.update(dto);
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT) 
     public void delete(@PathVariable Long id) {
         userService.delete(id);
-       
     }
 
     @GetMapping
@@ -50,22 +53,24 @@ public class UserRestController {
     }
 
     @GetMapping("/by-email")
-    public Optional<User> getByEmail(@RequestParam String email) {
-        return userService.getByEmail(email);
+    public User getByEmail(@RequestParam String email) {
+        return userService.getByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("User not found with email: " + email));
     }
 
     @GetMapping("/by-username")
-    public Optional<User> getByUserName(@RequestParam String userName) {
-        return userService.getByUserName(userName);
+    public User getByUserName(@RequestParam String userName) {
+        return userService.getByUserName(userName)
+                .orElseThrow(() -> new UserNotFoundException("User not found with username: " + userName));
     }
 
     @GetMapping("/exists/email")
-    public Boolean existsByEmail(@RequestParam String email) {
+    public boolean existsByEmail(@RequestParam String email) {
         return userService.existsByEmail(email);
     }
 
     @GetMapping("/exists/username")
-    public Boolean existsByUserName(@RequestParam String userName) {
+    public boolean existsByUserName(@RequestParam String userName) {
         return userService.existsByUserName(userName);
     }
 

@@ -78,7 +78,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void update_shouldPersistChanges_whenUnique() {
+    void update_shouldKeepChanges_whenUnique() {
         dto.setUserId(2L);
         User existing = new User();
         existing.setUserId(2L);

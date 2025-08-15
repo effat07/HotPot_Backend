@@ -14,11 +14,9 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@Data
-@NoArgsConstructor
+
+
 @Entity
 @Table(name = "carts")
 public class Cart {
@@ -33,4 +31,45 @@ public class Cart {
     @ManyToOne
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
+    
+    public Cart() {
+    	
+    }
+
+	public Cart(Long cartId, User user, Restaurant restaurant) {
+		super();
+		this.cartId = cartId;
+		this.user = user;
+		this.restaurant = restaurant;
+	}
+
+	public Long getCartId() {
+		return cartId;
+	}
+
+	public void setCartId(Long cartId) {
+		this.cartId = cartId;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public Restaurant getRestaurant() {
+		return restaurant;
+	}
+
+	public void setRestaurant(Restaurant restaurant) {
+		this.restaurant = restaurant;
+	}
+
+	@Override
+	public String toString() {
+		return "Cart [cartId=" + cartId + ", user=" + user + ", restaurant=" + restaurant + "]";
+	}
+    
 }

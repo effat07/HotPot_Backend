@@ -46,7 +46,6 @@ class MenuServiceImplTest {
         dto.setDietaryInfo(DietaryInfo.VEG);
         dto.setTaste(Taste.SAVORY);
         dto.setAvailabilitySlot(AvailabilitySlot.LUNCH);
-        // nutrition are Integers in your entity/service:
         dto.setNutritionCalories(350);
         dto.setNutritionProtein(12);
         dto.setNutritionCarbs(45);
@@ -89,7 +88,7 @@ class MenuServiceImplTest {
         assertEquals("Veg Burger", cap.getValue().getName());
         assertEquals(129.0, cap.getValue().getPrice());
         assertTrue(cap.getValue().isInStock());
-        assertNotNull(cap.getValue().getImage()); // byte[]
+        assertNotNull(cap.getValue().getImage()); 
     }
 
     @Test
@@ -104,7 +103,6 @@ class MenuServiceImplTest {
         assertThrows(IllegalArgumentException.class, () -> menuService.create(null));
     }
 
-    // -------- READ --------
     @Test
     void getById_found() {
         when(menuRepository.findById(1L)).thenReturn(Optional.of(entity));

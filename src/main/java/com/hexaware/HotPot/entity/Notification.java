@@ -19,10 +19,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-@Data
-@NoArgsConstructor
+
 @Entity
 @Table(name = "notifications")
 public class Notification {
@@ -45,4 +42,74 @@ public class Notification {
 	    private NotificationType type; // ORDER_PLACED, ORDER_UPDATED
 
 	    private LocalDateTime sentAt;
+	    
+	    public Notification() {
+	    	
+	    }
+
+		public Notification(Long notificationId, User user, Order order, NotificationChannel channel,
+				NotificationType type, LocalDateTime sentAt) {
+			super();
+			this.notificationId = notificationId;
+			this.user = user;
+			this.order = order;
+			this.channel = channel;
+			this.type = type;
+			this.sentAt = sentAt;
+		}
+
+		public Long getNotificationId() {
+			return notificationId;
+		}
+
+		public void setNotificationId(Long notificationId) {
+			this.notificationId = notificationId;
+		}
+
+		public User getUser() {
+			return user;
+		}
+
+		public void setUser(User user) {
+			this.user = user;
+		}
+
+		public Order getOrder() {
+			return order;
+		}
+
+		public void setOrder(Order order) {
+			this.order = order;
+		}
+
+		public NotificationChannel getChannel() {
+			return channel;
+		}
+
+		public void setChannel(NotificationChannel channel) {
+			this.channel = channel;
+		}
+
+		public NotificationType getType() {
+			return type;
+		}
+
+		public void setType(NotificationType type) {
+			this.type = type;
+		}
+
+		public LocalDateTime getSentAt() {
+			return sentAt;
+		}
+
+		public void setSentAt(LocalDateTime sentAt) {
+			this.sentAt = sentAt;
+		}
+
+		@Override
+		public String toString() {
+			return "Notification [notificationId=" + notificationId + ", user=" + user + ", order=" + order
+					+ ", channel=" + channel + ", type=" + type + ", sentAt=" + sentAt + "]";
+		}
+	    
 }

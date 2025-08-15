@@ -1,8 +1,3 @@
-
-/*
- * Author: Effat Mujawar 
- * Date:10/08/2025
- **/
 package com.hexaware.HotPot.service;
 
 import java.util.List;
@@ -10,7 +5,7 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.hexaware.HotPot.dto.UserDTO;
@@ -24,8 +19,13 @@ public class UserServiceImpl implements IUserService {
 
     private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Override
     public User create(UserDTO dto) {
@@ -39,8 +39,6 @@ public class UserServiceImpl implements IUserService {
         String email = trimOrNull(dto.getEmail());
         String userName = trimOrNull(dto.getUserName());
         String phone = trimOrNull(dto.getPhone());
-
-        log.debug("Email: {}, Username: {}", email, userName);
 
         if (email == null) throw new IllegalArgumentException("Email is required");
         if (userName == null) throw new IllegalArgumentException("Username is required");
@@ -58,7 +56,9 @@ public class UserServiceImpl implements IUserService {
         user.setPhone(phone);
         user.setRole(dto.getRole());
         user.setActive(dto.isActive());
-        user.setPassword(dto.getPassword());
+
+        // Encode raw password on create
+        user.setPassword(encodeIfNeeded(dto.getPassword()));
 
         User savedUser = userRepository.save(user);
         log.info("User created, ID: {}", savedUser.getUserId());
@@ -89,8 +89,6 @@ public class UserServiceImpl implements IUserService {
         String newEmail = trimOrNull(dto.getEmail());
         String newUserName = trimOrNull(dto.getUserName());
 
-        log.debug("New email: {}, New username: {}", newEmail, newUserName);
-
         if (newEmail != null && !newEmail.equalsIgnoreCase(existing.getEmail())
                 && userRepository.existsByEmail(newEmail)) {
             throw new IllegalArgumentException("Email already in use");
@@ -107,7 +105,7 @@ public class UserServiceImpl implements IUserService {
         existing.setActive(dto.isActive());
 
         if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
-            existing.setPassword(dto.getPassword());
+            existing.setPassword(encodeIfNeeded(dto.getPassword()));
         }
 
         User updatedUser = userRepository.save(existing);
@@ -177,5 +175,13 @@ public class UserServiceImpl implements IUserService {
         if (s == null) return null;
         String t = s.trim();
         return t.isEmpty() ? null : t;
+    }
+
+    private boolean looksLikeBCrypt(String s) {
+        return s != null && s.matches("^\\$2[aby]?\\$\\d\\d\\$[./A-Za-z0-9]{53}$");
+    }
+
+    private String encodeIfNeeded(String rawOrHash) {
+        return looksLikeBCrypt(rawOrHash) ? rawOrHash : passwordEncoder.encode(rawOrHash);
     }
 }

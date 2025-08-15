@@ -61,7 +61,6 @@ public class OrderItemServiceImpl implements IOrderItemService {
         OrderItem existing = orderItemRepository.findById(dto.getOrderItemId())
             .orElseThrow(() -> new OrderNotFoundException("OrderItem not found: " + dto.getOrderItemId()));
 
-        // Re-link order if provided and different
         if (dto.getOrderId() != null &&
             (existing.getOrder() == null || !existing.getOrder().getOrderId().equals(dto.getOrderId()))) {
             var order = orderRepository.findById(dto.getOrderId())
@@ -69,7 +68,6 @@ public class OrderItemServiceImpl implements IOrderItemService {
             existing.setOrder(order);
         }
 
-        // Re-link menu if provided and different
         if (dto.getMenuId() != null &&
             (existing.getMenuItem() == null || !existing.getMenuItem().getMenuId().equals(dto.getMenuId()))) {
             var menu = menuRepository.findById(dto.getMenuId())
@@ -81,7 +79,6 @@ public class OrderItemServiceImpl implements IOrderItemService {
         if (dto.getUnitPrice() != null) existing.setUnitPrice(dto.getUnitPrice());
         if (dto.getQuantity() > 0) existing.setQuantity(dto.getQuantity());
 
-        // If lineTotal provided, use it; otherwise recompute
         if (dto.getLineTotal() != null) {
             existing.setLineTotal(dto.getLineTotal());
         } else {

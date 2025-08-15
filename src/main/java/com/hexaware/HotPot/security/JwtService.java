@@ -17,7 +17,7 @@ public class JwtService {
   @Value("${app.jwt.secret:change-this-32+chars-secret-key-change-me}")
   private String secret;
 
-  @Value("${app.jwt.expiration-ms:86400000}") // 24h
+  @Value("${app.jwt.expiration-ms:86400000}") 
   private long jwtExpiryMs;
 
   private byte[] key() {

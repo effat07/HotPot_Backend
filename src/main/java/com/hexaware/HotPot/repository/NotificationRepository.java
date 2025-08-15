@@ -11,5 +11,4 @@ import com.hexaware.HotPot.entity.Notification;
 
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
-    List<Notification> findByUserUserId(Long userId);
 }

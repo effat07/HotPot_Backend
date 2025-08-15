@@ -31,22 +31,32 @@ public class CartItemServiceImpl implements ICartItemService {
     @Override
     public CartItem create(CartItemDTO dto) {
         log.info("Creating new CartItem");
+
         var cart = cartRepository.findById(dto.getCartId())
             .orElseThrow(() -> {
                 log.error("Cart not found: {}", dto.getCartId());
                 return new RuntimeException("Cart not found: " + dto.getCartId());
             });
+
         var menu = menuRepository.findById(dto.getMenuId())
             .orElseThrow(() -> {
                 log.error("Menu not found: {}", dto.getMenuId());
                 return new MenuItemNotFoundException("Menu not found: " + dto.getMenuId());
             });
 
+        int qty = dto.getQuantity() > 0 ? dto.getQuantity() : 1;
+
+        Double incomingPrice = dto.getItemPrice(); 
+        double priceToUse = (incomingPrice != null) ? incomingPrice : menu.getPrice();
+        if (priceToUse <= 0) {
+            throw new IllegalArgumentException("Item price must be greater than 0");
+        }
+
         CartItem ci = new CartItem();
         ci.setCart(cart);
         ci.setMenuItem(menu);
-        ci.setQuantity(dto.getQuantity() > 0 ? dto.getQuantity() : 1);
-        ci.setItemPrice(dto.getItemPrice() != null ? dto.getItemPrice() : menu.getPrice());
+        ci.setQuantity(qty);
+        ci.setItemPrice(priceToUse);
         ci.setNotes(dto.getNotes());
 
         CartItem saved = cartItemRepository.save(ci);
@@ -83,6 +93,7 @@ public class CartItemServiceImpl implements ICartItemService {
             existing.setCart(cart);
         }
 
+        boolean menuChanged = false;
         if (dto.getMenuId() != null &&
             (existing.getMenuItem() == null || !existing.getMenuItem().getMenuId().equals(dto.getMenuId()))) {
             var menu = menuRepository.findById(dto.getMenuId())
@@ -91,10 +102,24 @@ public class CartItemServiceImpl implements ICartItemService {
                     return new MenuItemNotFoundException("Menu not found: " + dto.getMenuId());
                 });
             existing.setMenuItem(menu);
+            menuChanged = true;
         }
 
         if (dto.getQuantity() > 0) existing.setQuantity(dto.getQuantity());
-        if (dto.getItemPrice() != null) existing.setItemPrice(dto.getItemPrice());
+
+        if (dto.getItemPrice() != null) {
+            if (dto.getItemPrice() <= 0) {
+                throw new IllegalArgumentException("Item price must be greater than 0");
+            }
+            existing.setItemPrice(dto.getItemPrice());
+        } else if (menuChanged) {
+            double newMenuPrice = existing.getMenuItem().getPrice();
+            if (newMenuPrice <= 0) {
+                throw new IllegalStateException("Menu price must be greater than 0");
+            }
+            existing.setItemPrice(newMenuPrice);
+        }
+
         if (dto.getNotes() != null) existing.setNotes(dto.getNotes());
 
         CartItem updated = cartItemRepository.save(existing);

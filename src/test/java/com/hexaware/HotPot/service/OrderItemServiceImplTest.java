@@ -39,9 +39,9 @@ class OrderItemServiceImplTest {
         dto = new OrderItemDTO();
         dto.setOrderId(1L);
         dto.setMenuId(2L);
-        dto.setQuantity(0); // should default to 1
-        dto.setUnitPrice(null); // should default to menu price
-        dto.setLineTotal(null); // recompute
+        dto.setQuantity(0); 
+        dto.setUnitPrice(null); 
+        dto.setLineTotal(null);
 
         order = new Order();
         order.setOrderId(1L);
@@ -71,7 +71,7 @@ class OrderItemServiceImplTest {
         assertEquals(menu, toSave.getMenuItem());
         assertEquals("Margherita", toSave.getItemName());
         assertEquals(250.0, toSave.getUnitPrice(), 0.001);
-        assertEquals(1, toSave.getQuantity()); // defaulted
+        assertEquals(1, toSave.getQuantity()); 
         assertEquals(250.0, toSave.getLineTotal(), 0.001);
     }
 
@@ -109,7 +109,7 @@ class OrderItemServiceImplTest {
 
         dto.setOrderItemId(10L);
         dto.setQuantity(3);
-        dto.setLineTotal(null); // should recompute -> 200 * 3 = 600
+        dto.setLineTotal(null); 
 
         when(orderItemRepository.findById(10L)).thenReturn(Optional.of(existing));
         when(orderItemRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));

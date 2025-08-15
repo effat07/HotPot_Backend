@@ -53,7 +53,6 @@ class AddressServiceImplTest {
         entity.setLandmark(dto.getLandmark());
     }
 
-    // CREATE
     @Test
     void create_linksUserAndSaves() {
         when(userRepository.findById(10L)).thenReturn(Optional.of(user));
@@ -74,7 +73,6 @@ class AddressServiceImplTest {
         verify(addressRepository, never()).save(any());
     }
 
-    // READ
     @Test
     void getById_found() {
         when(addressRepository.findById(1L)).thenReturn(Optional.of(entity));
@@ -82,7 +80,6 @@ class AddressServiceImplTest {
         verify(addressRepository).findById(1L);
     }
 
-    // UPDATE
     @Test
     void update_appliesChanges_andSaves() {
         AddressDTO upd = new AddressDTO();
@@ -127,7 +124,6 @@ class AddressServiceImplTest {
         assertThrows(RuntimeException.class, () -> addressService.update(bad));
     }
 
-    // DELETE
     @Test
     void delete_success_returnsMessage() {
         when(addressRepository.existsById(1L)).thenReturn(true);
@@ -143,7 +139,6 @@ class AddressServiceImplTest {
         verify(addressRepository, never()).deleteById(anyLong());
     }
 
-    // LIST BY USER
     @Test
     void getByUser_checksUserAndReturnsList() {
         when(userRepository.existsById(10L)).thenReturn(true);

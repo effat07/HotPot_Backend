@@ -12,9 +12,8 @@ public class HotPotBackendV2Application {
 		Logger  log =  LoggerFactory.getLogger(HotPotBackendV2Application.class);	
 		
 		log.info("main() started your application");
-
+		
 		SpringApplication.run(HotPotBackendV2Application.class, args);
-//		log.info("application terminated..");
 
 	}
 
