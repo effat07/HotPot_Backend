@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import com.hexaware.HotPot.entity.Cart;
 import com.hexaware.HotPot.service.ICartService;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/carts")
 public class CartRestController {

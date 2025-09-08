@@ -115,6 +115,8 @@ public class RestaurantServiceImpl implements IRestaurantService {
         return "Deleted successfully";
     }
 
+    
+    
     @Override
     public List<Restaurant> getAllRestaurant(RestaurantDTO unused) {
         log.info("Get all restaurants called");
@@ -136,7 +138,12 @@ public class RestaurantServiceImpl implements IRestaurantService {
         String q = locationPart == null ? "" : locationPart.trim();
         return restaurantRepository.findByLocationContainingIgnoreCase(q);
     }
+    
+    public List<Restaurant> getRestaurantsByOwner(Long ownerId) {
+        return restaurantRepository.findByOwnerUserId(ownerId);
+    }
 
+    
     @Override
     public boolean existsByRestaurantName(String restaurantName) {
         log.debug("Check restaurant name exists called");

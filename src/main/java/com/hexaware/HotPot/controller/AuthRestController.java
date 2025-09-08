@@ -15,6 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Map;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/auth")
 public class AuthRestController {
@@ -38,6 +39,13 @@ public class AuthRestController {
         }
     }
 
+    public static class LogoutResponse {
+        public String message;
+        public LogoutResponse(String message) {
+            this.message = message;
+        }
+    }
+    
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED) 
     public User register(@RequestBody UserDTO dto) {
@@ -48,17 +56,13 @@ public class AuthRestController {
         u.setPhone(dto.getPhone());
         u.setRole(dto.getRole());
         u.setActive(dto.isActive());
-
         User saved = authService.register(u);
-
-        
         return saved; 
     }
     @PostMapping("/login")
     public AuthResponse login(@RequestBody LoginRequest req) {
         User user = authService.login(req.getEmailOrUserName(), req.getPassword());
         if (user == null) {
-            // No ResponseEntity; set 401 via exception
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials");
         }
         String subject = user.getEmail() != null ? user.getEmail() : user.getUserName();
@@ -66,10 +70,15 @@ public class AuthRestController {
             subject,
             Map.of(
                 "uid", user.getUserId(),
-                "role", user.getRole() != null ? user.getRole().name() : "CUSTOMER",
+                "role", user.getRole() != null ? "ROLE_" + user.getRole().name() : "ROLE_CUSTOMER",
                 "active", user.isActive()
             )
         );
         return new AuthResponse(token, user);
+    }
+    @PostMapping("/logout")
+    @ResponseStatus(HttpStatus.OK)
+    public Map<String, String> logout() {
+        return Map.of("message", "Logout successful");
     }
 }

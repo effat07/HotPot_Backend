@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/users")
 public class UserRestController {
@@ -36,7 +37,7 @@ public class UserRestController {
     }
 
     @PutMapping("/{id}")
-    public User update(@PathVariable Long id, @Valid @RequestBody UserDTO dto) {
+    public User update(@PathVariable Long id,  @RequestBody UserDTO dto) {
         dto.setUserId(id); 
         return userService.update(dto);
     }

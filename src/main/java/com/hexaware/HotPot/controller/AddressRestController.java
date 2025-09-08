@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import com.hexaware.HotPot.dto.AddressDTO;
 import com.hexaware.HotPot.entity.Address;
 import com.hexaware.HotPot.service.IAddressService;
-
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/addresses")
 public class AddressRestController {

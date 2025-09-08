@@ -21,4 +21,7 @@ public interface IRestaurantService {
     List<Restaurant> findByRestaurantName(String restaurantName);
     List<Restaurant> findByLocation(String location);
     boolean existsByRestaurantName(String restaurantName);
+    
+    List<Restaurant> getRestaurantsByOwner(Long ownerId);
+
 }

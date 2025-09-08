@@ -16,6 +16,7 @@ import com.hexaware.HotPot.dto.PaymentDTO;
 import com.hexaware.HotPot.entity.Payment;
 import com.hexaware.HotPot.service.IPaymentService;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/payments")
 public class PaymentRestController {

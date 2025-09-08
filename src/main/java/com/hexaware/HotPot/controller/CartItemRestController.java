@@ -15,6 +15,7 @@ import com.hexaware.HotPot.dto.CartItemDTO;
 import com.hexaware.HotPot.entity.CartItem;
 import com.hexaware.HotPot.service.ICartItemService;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/cart-items")
 public class CartItemRestController {

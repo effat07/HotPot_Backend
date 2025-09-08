@@ -8,10 +8,14 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import com.hexaware.HotPot.entity.Restaurant;
+import java.util.Optional;
 
 @Repository
 public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
     List<Restaurant> findByRestaurantNameContainingIgnoreCase(String restaurantName);
     List<Restaurant> findByLocationContainingIgnoreCase(String location);
     boolean existsByRestaurantName(String restaurantName);
+    List<Restaurant> findByOwnerUserId(Long ownerId);
+
+
 }

@@ -4,12 +4,14 @@
  **/
 package com.hexaware.HotPot.controller;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.hexaware.HotPot.dto.MenuDTO;
 import com.hexaware.HotPot.entity.Menu;
@@ -18,6 +20,7 @@ import com.hexaware.HotPot.entity.enums.DietaryInfo;
 import com.hexaware.HotPot.entity.enums.Taste;
 import com.hexaware.HotPot.service.IMenuService;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/menus")
 public class MenuRestController {
@@ -89,5 +92,17 @@ public class MenuRestController {
     @GetMapping("/available")
     public List<Menu> getAvailable() {
         return menuService.getAvailable();
+    }
+    @PostMapping(value = "/with-image", consumes = "multipart/form-data")
+    public Menu createWithImage(@RequestPart("menu") @Valid MenuDTO dto, @RequestPart("image") MultipartFile image) throws IOException {
+        dto.setImage(image.getBytes());
+        return menuService.create(dto);
+    }
+    @PutMapping(value = "/with-image", consumes = "multipart/form-data")
+    public Menu updateWithImage(@RequestPart("menu") @Valid MenuDTO dto, @RequestPart(value = "image", required = false) MultipartFile image) throws IOException {
+        if (image != null && !image.isEmpty()) {
+            dto.setImage(image.getBytes());
+        }
+        return menuService.update(dto);
     }
 }

@@ -16,6 +16,7 @@ import com.hexaware.HotPot.entity.Order;
 import com.hexaware.HotPot.entity.enums.OrderStatus;
 import com.hexaware.HotPot.service.IOrderService;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/orders")
 public class OrderRestController {
@@ -34,7 +35,7 @@ public class OrderRestController {
     }
 
     @PutMapping
-    public Order update(@Valid @RequestBody OrderDTO dto) {
+    public Order update(@RequestBody OrderDTO dto) {
         return orderService.update(dto);
     }
 

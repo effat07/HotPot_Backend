@@ -15,6 +15,7 @@ import com.hexaware.HotPot.dto.OrderItemDTO;
 import com.hexaware.HotPot.entity.OrderItem;
 import com.hexaware.HotPot.service.IOrderItemService;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/order-items")
 public class OrderItemRestController {
