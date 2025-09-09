@@ -42,7 +42,9 @@ public class SecurityConfig {
                     "/api/restaurants",
                     "/api/restaurants/search/**",
                     "/api/menus/available",
-                    "/api/menus/search/**"
+                    "/api/menus/search/**",
+                    "/api/menus/by-restaurant/**",  
+                    "/api/menus/{id}" 
                 ).permitAll()
                 
                 // Allow specific roles to access user-related endpoints
